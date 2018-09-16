@@ -49,6 +49,7 @@ class StartScreen extends React.Component {
       <label>Number of players:</label>
       <input
         type='number'
+        min="0" inputmode="numeric" pattern="[0-9]+"
         value={numPlayers}
         onChange={this.props.onPlayerNumChange}
       />
