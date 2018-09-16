@@ -1,7 +1,10 @@
 const path = require('path')
 
+// Switch to production mode when deployed on Glitch.
+let mode = process.env.PROJECT_DOMAIN ? 'production' : 'development'
+
 module.exports = {
-  mode: 'development',
+  mode,
   entry: './client/App.jsx',
   devtool: 'source-map',
   output: {
