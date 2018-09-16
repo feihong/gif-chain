@@ -31,23 +31,26 @@ class StartScreen extends React.Component {
       numPlayers: props.numPlayers,
       selectedProblem: 0,
     }
-    this.handleClick = this.handleClick.bind(this)
-    this.handleProblemChange = this.handleProblemChange.bind(this)
   }
 
-  handleClick() {
+  handleClick = () => {
     this.props.onStart(this.state.selectedProblem)
   }
 
-  handleProblemChange(evt) {
+  handleProblemChange = (evt) => {
     let val = evt.target.value
     this.setState({selectedProblem: (val === '') ? null : parseInt(val)})
   }
 
   handleNumChange = (evt) => {
-    let val = parseInt(evt.target.value)
-    this.props.onPlayerNumChange(val)
-    this.setState({numPlayers: val})
+    let numPlayers = parseInt(evt.target.value)
+    let problems = this.props.problems
+    let problem = problems[this.state.selectedProblem]
+    let selectedProblem = (problem.picts.length < numPlayers)
+      ? problems.findIndex(p => p.picts.length >= numPlayers)
+      : this.state.selectedProblem
+    this.setState({numPlayers, selectedProblem})
+    this.props.onPlayerNumChange(numPlayers)
   }
 
   render() {
