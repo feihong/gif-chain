@@ -1,0 +1,53 @@
+{
+  "name": "gif-chain",
+  "version": "0.1.0",
+  "license": "MIT",
+  "engines": {
+    "node": "10.x"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "express": "^4.16.3"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "webpack": "^4.15.1",
+    "webpack-cli": "^3.0.6"
+  },
+  "scripts": {
+    "start": "webpack && node server.js",
+    "build": "webpack",
+    "watch": "webpack -w",
+    "server": "nodemon server.js",
+    "dev": "run-p server watch"
+  },
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "targets": {
+            "browsers": [
+              "last 2 Chrome versions"
+            ]
+          }
+        }
+      ],
+      "react",
+      "stage-2"
+    ]
+  },
+  "keywords": [
+    "node",
+    "glitch",
+    "express",
+    "react",
+    "babel"
+  ]
+}
