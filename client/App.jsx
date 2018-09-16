@@ -28,11 +28,12 @@ class StartScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      numPlayers: 4,
+      numPlayers: props.numPlayers,
       selectedProblem: 0,
     }
     this.handleClick = this.handleClick.bind(this)
     this.handleProblemChange = this.handleProblemChange.bind(this)
+    this.handleNumChange = this.handleNumChange.bind(this)
   }
 
   handleClick() {
@@ -44,28 +45,34 @@ class StartScreen extends React.Component {
     this.setState({selectedProblem: (val === '') ? null : parseInt(val)})
   }
 
+  handleNumChange = (evt) => {
+    let val = evt.target.value
+    this.setState({numPlayers: parseInt(val)})
+  }
+
   render() {
-    let {numPlayers, problems} = this.props
+    let {problems} = this.props
+    let {numPlayers} = this.state
     let maxPlayers =
       problems.length === 0
       ? 0
-      : Math.max(...this.props.problems.map(p => p.picts.length))
+      : Math.max(...problems.map(p => p.picts.length))
+
+    let playerOptions = range(3, maxPlayers)
+      .map(num => <option key={num} value={num}>{num}</option>)
 
     let options = problems
       .filter(p => p.picts.length >= numPlayers)
       .map((p, i) =>
-        <option value={i}>
+        <option key={i} value={i}>
           {`${p.title} (${p.picts.length})`}
         </option>)
 
     return <div className='start'>
       <label>Number of players:</label>
-      <input
-        type='number'
-        min="0" inputmode="numeric" pattern="[0-9]+"
-        value={numPlayers}
-        onChange={this.props.onPlayerNumChange}
-      />
+      <select value={numPlayers} onChange={this.handleNumChange}>
+        {playerOptions}
+      </select>
       <label>Problems</label>
       <select onChange={this.handleProblemChange} value={this.state.selectedProblem}>
         {options}
@@ -73,7 +80,6 @@ class StartScreen extends React.Component {
       <button
         className="btn btn-default"
         onClick={this.handleClick}
-        disabled={this.state.selectedProblem === null}
       >
         Start Game
       </button>
