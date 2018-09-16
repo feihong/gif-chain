@@ -15,6 +15,14 @@ function shuffleArray(a) {
     return a;
 }
 
+function range(start, end) {
+  let size = end - start + 1
+  if (size <= 0) {
+    return []
+  }
+  return [...Array(size).keys()].map(i => i + start)
+}
+
 
 class StartScreen extends React.Component {
   constructor(props) {
@@ -24,21 +32,26 @@ class StartScreen extends React.Component {
       selectedProblem: 0,
     }
     this.handleClick = this.handleClick.bind(this)
-    this.handleChange = this.handleChange.bind(this)
+    this.handleProblemChange = this.handleProblemChange.bind(this)
   }
 
   handleClick() {
     this.props.onStart(this.state.selectedProblem)
   }
 
-  handleChange(evt) {
+  handleProblemChange(evt) {
     let val = evt.target.value
     this.setState({selectedProblem: (val === '') ? null : parseInt(val)})
   }
 
   render() {
     let {numPlayers, problems} = this.props
-    let options = this.props.problems
+    let maxPlayers =
+      problems.length === 0
+      ? 0
+      : Math.max(...this.props.problems.map(p => p.picts.length))
+
+    let options = problems
       .filter(p => p.picts.length >= numPlayers)
       .map((p, i) =>
         <option value={i}>
@@ -54,7 +67,7 @@ class StartScreen extends React.Component {
         onChange={this.props.onPlayerNumChange}
       />
       <label>Problems</label>
-      <select onChange={this.handleChange} value={this.state.selectedProblem}>
+      <select onChange={this.handleProblemChange} value={this.state.selectedProblem}>
         {options}
       </select>
       <button
