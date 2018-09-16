@@ -33,7 +33,6 @@ class StartScreen extends React.Component {
     }
     this.handleClick = this.handleClick.bind(this)
     this.handleProblemChange = this.handleProblemChange.bind(this)
-    this.handleNumChange = this.handleNumChange.bind(this)
   }
 
   handleClick() {
@@ -46,8 +45,9 @@ class StartScreen extends React.Component {
   }
 
   handleNumChange = (evt) => {
-    let val = evt.target.value
-    this.setState({numPlayers: parseInt(val)})
+    let val = parseInt(evt.target.value)
+    this.props.onPlayerNumChange(val)
+    this.setState({numPlayers: val})
   }
 
   render() {
@@ -214,6 +214,7 @@ class Game extends React.Component {
       mode: 'start',    // start | main | reveal
       selectedProblem: null,
       problems: [],
+      currentPicts: [],
     }
     this.changeNumPlayers = this.changeNumPlayers.bind(this)
     this.onStart = this.onStart.bind(this)
@@ -226,15 +227,14 @@ class Game extends React.Component {
       this.setState({problems: res.data}))
   }
 
-  changeNumPlayers(evt) {
-    let num = parseInt(evt.target.value)
-    if (num >= 2) {
-      this.setState({numPlayers: num})
-    }
+  changeNumPlayers(num) {
+    this.setState({numPlayers: num})
   }
 
   onStart(selectedProblem) {
-    this.setState({mode: 'main', selectedProblem})
+    let problem = this.state.problems[selectedProblem]
+    let currentPicts = problem.picts.slice(0, this.state.numPlayers)
+    this.setState({mode: 'main', selectedProblem, currentPicts})
   }
 
   handleMainDone() {
@@ -246,8 +246,6 @@ class Game extends React.Component {
   }
 
   render() {
-    let problem
-
     switch (this.state.mode) {
       case 'start':
         return <StartScreen
@@ -257,15 +255,13 @@ class Game extends React.Component {
           onStart={this.onStart}
         />
       case 'main':
-        problem = this.state.problems[this.state.selectedProblem]
         return <MainScreen
-          picts={shuffleArray(problem.picts)}
+          picts={shuffleArray(this.state.currentPicts)}
           onDone={this.handleMainDone}
         />
       case 'reveal':
-        problem = this.state.problems[this.state.selectedProblem]
         return <RevealScreen
-          picts={problem ? problem.picts : []}
+          picts={this.state.currentPicts}
           onDone={this.handleRevealDone}
         />
       default:

@@ -1,0 +1,2 @@
+- Automatically change the selected problem when number changes
+- Select a random range of pictures
